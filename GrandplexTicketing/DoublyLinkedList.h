@@ -39,6 +39,16 @@ public:
 		return this->size;
 	}
 
+	node<T>* getHead()
+	{
+		return this->head;
+	}
+
+	node<T>* getTail()
+	{
+		return this->tail;
+	}
+
 	void addToFront(T data)
 	{
 		node<T>* newNode = createNode(data);
