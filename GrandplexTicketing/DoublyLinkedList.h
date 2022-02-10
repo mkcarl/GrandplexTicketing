@@ -17,6 +17,9 @@ class DoublyLinkedList
 	node<T>* tail;
 	int size;
 
+	int currentPosition = 0;
+	node<T>* currentNode = nullptr;
+
 	node<T>* createNode(T data)
 	{
 		node<T>* newNode = new node<T>();
@@ -98,7 +101,7 @@ public:
 		--this->size;
 	}
 
-	void deteleFromEnd()
+	void deleteFromEnd()
 	{
 		if (this->head == nullptr)
 		{
@@ -113,11 +116,110 @@ public:
 		--this->size;
 	}
 
-	static DoublyLinkedList mergeSort(DoublyLinkedList list)
-	{ 
-		// returns a sorted list, does not sort the list itself
+	void addAtIndex(T data, int index) 
+	{
+		// 0 based index
+		if (index > this->size)
+		{
+			throw out_of_range("Index out of bound!");
+		}
+
+		node<T>* newNode = createNode(data);
+
+		node<T>* current = this->head;
+
+		if (this->head == nullptr)
+		{
+			this->head = this->tail = newNode;
+		}
+		else if (index == 0)
+		{
+			addToFront(data);
+		}
+		else if (index == this->size)
+		{
+			addToEnd(data);
+		}
+		else
+		{
+			for (int i = 0; i < index - 1; ++i)
+			{
+				current = current->next;
+			}
+			current->next->prev = newNode;
+			newNode->next = current->next;
+			newNode->prev = current;
+			current->next = newNode; 
+		}
+		++this->size;
 	}
 
+	void deleteAtIndex(int index)
+	{
+		if (index >= this->size)
+		{
+			throw out_of_range("Index out of bound!");
+		}
+		if (this->head == nullptr)
+		{
+			throw out_of_range("List is empty!");
+		}
+		int i = 0;
+		node<T>* current = this->head;
+
+		if (index == 0)
+		{
+			deleteFromFront();
+		}
+		else if (index == this->size - 1)
+		{
+			deleteFromEnd();
+		}
+		else
+		{
+			for (int i = 0; i < index; ++i)
+			{
+				current = current->next; 
+			}
+			current->prev->next = current->next;
+			current->next->prev = current->prev;
+			delete current; 
+		}
+	}
+
+	T* getAtIndex(int index)
+	{
+		if (currentNode == nullptr)
+		{
+			currentNode = this->head;
+			currentPosition = index;
+			for (int i = 0; i < index; ++i)
+			{
+				currentNode = currentNode->next; 
+			}
+		}
+		else
+		{
+			if (index > currentPosition)
+			{
+				for (int i = 0; i < index-currentPosition; ++i)
+				{
+					currentNode = currentNode->next;
+					++currentPosition;
+				}
+			}
+			else
+			{
+				for (int i = 0; i < currentPosition - index; ++i)
+				{
+					currentNode = currentNode->prev;
+					--currentPosition;
+				}
+			}
+		}
+		return &currentNode->data;
+	}
+	
 	void display()
 	{
 		// mainly for debugging purposes

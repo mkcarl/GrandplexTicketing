@@ -19,16 +19,86 @@ void print_title(string text)
 
 }
 
+// linked list for the entities, whole program only uses this 2 linked list 
+DoublyLinkedList<Movie> movie_list = DoublyLinkedList<Movie>();
+DoublyLinkedList<Transaction> transaction_list = DoublyLinkedList<Transaction>();
 
-int main(int argc, char* argv[])
+
+// hard coded sample data
+void createDummyData()
 {
-	// linked list for the entities, whole program only uses this 2 linked list 
-	DoublyLinkedList<Movie> movie_list = DoublyLinkedList<Movie>();
-	DoublyLinkedList<Transaction> transaction_list = DoublyLinkedList<Transaction>();
+	string titles[] = { "Spiderman: No way home", "Avengers : End game", "Titanic", "Chucky", "KongFu Hustle", "Frozen" };
+	double durations[] = { 3, 2.5, 1.5, 1.5, 1.5, 1 };
+	string genres[] = { "Action","Action","Romance","Horror","Comedy","Cartoon" };
+	int ratings[] = { 5,5,3,1,3,1 };
+	string airtimes[] = { "0900", "1200", "1100", "1130", "2300", "0200" };
 
-	// hard coded sample data
-	// TODO : add code for creating sample data
+	for (int i = 0; i < 6; ++i)
+	{
+		Movie newMovie = Movie();
+		newMovie.movie_id = i;
+		newMovie.title = titles[i];
+		newMovie.duration = durations[i];
+		newMovie.genre = genres[i];
+		newMovie.rating = ratings[i];
+		newMovie.air_time = airtimes[i];
+		newMovie.number_of_available_seats = 100;
+		movie_list.addToEnd(newMovie);
+	}
 
+	int days[] = { 12,23,30,5,23 };
+	int months[] = { 1,2,3,4,5,6 };
+	string methods[] = { "Cash","Cash", "Cash", "E-wallet", "Credit Card","Credit Card" };
+	string seats[] = { "A1", "B1", "B9", "B10", "J4", "D4", "D5", "D6", "D7", "A3","D3", "A7" };
+	DoublyLinkedList<Ticket> lists[6];
+	for (int i = 0; i < 6; ++i)
+	{
+		Seat seat = Seat();
+		seat.column = seats[i][0];
+		seat.row = seats[i][1] - '0';
+
+		Ticket tix = Ticket();
+		tix.ticket_id = i;
+		tix.seat = seat;
+		tix.movie = *movie_list.getAtIndex(i);
+		(movie_list.getAtIndex(i)->number_of_available_seats)--;
+		tix.price = 13;
+		DoublyLinkedList<Ticket> ls = DoublyLinkedList<Ticket>();
+		ls.addToEnd(tix);
+		lists[i] = ls;
+	}
+	for (int i = 0; i < 5; ++i)
+	{
+		Transaction t = Transaction();
+		t.transaction_id = i;
+		t.day = days[i];
+		t.month = months[i];
+		t.year = 2021;
+		t.payment_method = methods[i];
+		t.list_of_tickets = lists[i];
+		transaction_list.addToEnd(t);
+	}
+	Seat s1 = Seat();
+	s1.column = 'J';
+	s1.row = 10;
+	Ticket tix1 = Ticket();
+	tix1.seat = s1;
+	tix1.movie = movie_list.getHead()->data;
+	tix1.price = 13;
+	tix1.ticket_id = 7;
+	transaction_list.getTail()->data.list_of_tickets.addToEnd(tix1);
+
+	//movie_list.display();
+	//transaction_list.display();
+}
+
+int main()
+{
+	createDummyData();
+}
+
+int main1(int argc, char* argv[])
+{
 	// main program loop
 	// hard coded login
 	string username;
@@ -127,7 +197,6 @@ int main(int argc, char* argv[])
 				 * follow flow chart, EXCEPT, after found the product, no need to prompt if the user wan to search another item,
 				 * just go straight back to the main menu
 				 *
-				 * additional idea : format the output into a tabular format
 
 				 */
 				system("pause"); system("cls");
@@ -164,6 +233,16 @@ int main(int argc, char* argv[])
 				 *
 				 * Note : i think its best NOT to sort the original list, maybe create a new temp list, then sort the temp list. 
 				 */
+				// ori = [3,2,6,4,9]
+				// sorted = sort(ori)
+				// print(ori) -> [2,3,4,6,9]
+				// print(sorted) -> [2,3,4,6,9]
+
+				//instead, use this 
+				// sorted = sort(ori)
+				// print(ori) -> [3,2,6,4,9]
+				// print(sorted) -> [2,3,4,6,9]
+
 				system("pause"); system("cls");
 				break;
 			case 7:
@@ -173,13 +252,14 @@ int main(int argc, char* argv[])
 				 *
 				 * follow flow chart
 				 * but for the actual delete part, no need to go through the list one by one, just use the function to delete at specific index.
+				 * user input : 3
 				 */
 				system("pause"); system("cls");
 				break;
 			case 8:
 				/*
 				 * Functionality : Add new transaction 
-				 * Responsible : Hor Shen Hau
+				 * Responsible : Yan Mun Kye
 				 *
 				 * follow flow chart, but in the end no need to ask if they want to make another purchase, just go straight back to main menu
 				 * also need to ask them the seat they want, which you also need to check if the particular seat is available
@@ -191,7 +271,7 @@ int main(int argc, char* argv[])
 			case 9:
 				/*
 				 * Functionality : Show all transactions
-				 * Responsible : Yan Mun Kye
+				 * Responsible : Hor Shen Hau
 				 *
 				 * follow flow chart, but don't need for advance feature, just print all and thats it
 				 *
@@ -235,8 +315,5 @@ int main(int argc, char* argv[])
 			break; // break from the choice loop
 		}
 	}
-
-	
-
-
+	return 0; 
 }
