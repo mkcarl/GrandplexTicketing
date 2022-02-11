@@ -202,7 +202,8 @@ public:
 		{
 			if (index > currentPosition)
 			{
-				for (int i = 0; i < index-currentPosition; ++i)
+				int j = index - currentPosition;
+				for (int i = 0; i < j; ++i)
 				{
 					currentNode = currentNode->next;
 					++currentPosition;
@@ -210,7 +211,8 @@ public:
 			}
 			else
 			{
-				for (int i = 0; i < currentPosition - index; ++i)
+				int j = currentPosition - index;
+				for (int i = 0; i < j; ++i)
 				{
 					currentNode = currentNode->prev;
 					--currentPosition;

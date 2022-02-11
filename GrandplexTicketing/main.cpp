@@ -92,8 +92,23 @@ void createDummyData()
 	//transaction_list.display();
 }
 
+void main1()
+{
+	DoublyLinkedList<string> ls = DoublyLinkedList<string>();
+	ls.addToEnd("Hello");
+	ls.addToEnd("World");
+	ls.addToEnd("This");
+	ls.addToEnd("IS");
+	ls.addToEnd("a");
+	ls.addToEnd("program");
+
+	cout << *ls.getAtIndex(0) << endl;
+	cout << *ls.getAtIndex(2) << endl;
+	cout << *ls.getAtIndex(5) << endl;
+}
 int main(int argc, char* argv[])
 {
+	createDummyData();
 	// main program loop
 	// hard coded login
 	string username;
@@ -180,8 +195,30 @@ int main(int argc, char* argv[])
 				 * just show everything in the list and done
 				 *
 				 * additional idea : format the output into a tabular format
-
 				 */
+				system("cls");
+				print_title("All movies");
+				cout << setw(10) << right << "Movie ID"
+					<< " | " << setw(35) << right << "Title"
+					<< " | " << setw(15) << right << "Duration (hr)"
+					<< " | " << setw(10) << right << "Genre"
+					<< " | " << setw(8) << right << "Rating"
+					<< " | " << setw(10) << right << "Air Time"
+					<< " | " << setw(20) << right << "No. Available Seats"
+					<< endl;
+				cout << string(130, '-') << endl;
+				for (int i = 0; i < movie_list.getSize(); ++i)
+				{
+					Movie* mov = movie_list.getAtIndex(i);
+					cout << setw(10) << right << mov->movie_id
+						<< " | " << setw(35) << right << mov->title
+						<< " | " << setw(15) << right << mov->duration
+						<< " | " << setw(10) << right << mov->genre
+						<< " | " << setw(8) << left << string(mov->rating,'*')
+						<< " | " << setw(10) << right << mov->rating
+						<< " | " << setw(20) << right << mov->number_of_available_seats
+						<< endl;
+				}
 				system("pause"); system("cls");
 				break;
 			case 3:
