@@ -92,12 +92,7 @@ void createDummyData()
 	//transaction_list.display();
 }
 
-int main()
-{
-	createDummyData();
-}
-
-int main1(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	// main program loop
 	// hard coded login
