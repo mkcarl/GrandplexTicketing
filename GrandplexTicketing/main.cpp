@@ -22,7 +22,7 @@ void print_title(string text)
 // linked list for the entities, whole program only uses this 2 linked list 
 DoublyLinkedList<Movie> movie_list = DoublyLinkedList<Movie>();
 DoublyLinkedList<Transaction> transaction_list = DoublyLinkedList<Transaction>();
-
+int MOVIE_ID=0, TICKET_ID=0, TRANSACTION_ID=0; 
 
 // hard coded sample data
 void createDummyData()
@@ -35,8 +35,9 @@ void createDummyData()
 
 	for (int i = 0; i < 6; ++i)
 	{
+		
 		Movie newMovie = Movie();
-		newMovie.movie_id = i;
+		newMovie.movie_id = ++MOVIE_ID;;
 		newMovie.title = titles[i];
 		newMovie.duration = durations[i];
 		newMovie.genre = genres[i];
@@ -58,11 +59,11 @@ void createDummyData()
 		seat.row = seats[i][1] - '0';
 
 		Ticket tix = Ticket();
-		tix.ticket_id = i;
+		tix.ticket_id = ++TICKET_ID;
 		tix.seat = seat;
 		tix.movie = *movie_list.getAtIndex(i);
 		(movie_list.getAtIndex(i)->number_of_available_seats)--;
-		tix.price = 13;
+		tix.price = 13 + i;
 		DoublyLinkedList<Ticket> ls = DoublyLinkedList<Ticket>();
 		ls.addToEnd(tix);
 		lists[i] = ls;
@@ -70,7 +71,7 @@ void createDummyData()
 	for (int i = 0; i < 5; ++i)
 	{
 		Transaction t = Transaction();
-		t.transaction_id = i;
+		t.transaction_id = ++TRANSACTION_ID;
 		t.day = days[i];
 		t.month = months[i];
 		t.year = 2021;
@@ -82,9 +83,11 @@ void createDummyData()
 	s1.column = 'J';
 	s1.row = 10;
 	Ticket tix1 = Ticket();
+	++TICKET_ID;
 	tix1.seat = s1;
 	tix1.movie = movie_list.getHead()->data;
-	tix1.price = 13;
+	movie_list.getAtIndex(0)->number_of_available_seats--;
+	tix1.price = 20;
 	tix1.ticket_id = 7;
 	transaction_list.getTail()->data.list_of_tickets.addToEnd(tix1);
 
@@ -474,9 +477,140 @@ int main(int argc, char* argv[])
 				 * also need to ask them the seat they want, which you also need to check if the particular seat is available
 				 * also for this particular function, when inserting, will insert to sorted list (sorted by transaction ID) 
 				 */
+				{
+					print_title("New transaction (new purchase)");
+					DoublyLinkedList<Ticket> tix_list = DoublyLinkedList<Ticket>();
+					Transaction newTransaction = Transaction();
+					newTransaction.transaction_id = ++TRANSACTION_ID;
+					do
+					{
+						for (int i = 1; i <= movie_list.getSize(); ++i)
+						{
+							Movie* mov = movie_list.getAtIndex(i - 1);
+							cout << setw(3) << right << i << ". " <<
+								setw(10) << left << mov->title << " (" << mov->air_time << ")" << endl;
+						}
+						int movChoice_i;
+						while (true) {
+							cout << "Select your movie choice (Insert numbers only) : ";
+							cin >> movChoice_i;
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-				system("pause"); system("cls");
-				break;
+							//validation
+							if (cin.fail())
+							{
+								cout << "Invalid input! Please type numbers only!" << endl << endl;
+								cin.clear();
+								cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+								continue;
+							}
+							if (movChoice_i <= 0 || movChoice_i > movie_list.getSize())
+							{
+								cout << "Invalid choice! Please type numbers between 1 and " << movie_list.getSize() << " only!" << endl << endl;
+								continue;
+							}
+
+							// all good
+							break;
+						}
+						Movie* movChoice = movie_list.getAtIndex(movChoice_i - 1);
+						Ticket tix = Ticket();
+						Seat seat;
+						tix.movie = *movChoice;
+						while (true)
+						{
+							cout << "Enter row number (1 - 10) : ";
+							cin >> seat.row;
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							if (cin.fail())
+							{
+								cout << "Invalid input! Please type numbers only!" << endl << endl;
+								cin.clear();
+								cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+								continue;
+							}
+							if (seat.row <= 0 || seat.row > 10)
+							{
+								cout << "Invalid choice! Please type numbers between 1 and 10 only!" << endl << endl;
+								continue;
+							}
+
+							// all good
+							break;
+						}
+						while (true) {
+							cout << "Enter column (A - J) : ";
+							cin >> seat.column;
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							if (cin.fail())
+							{
+								cout << "Invalid input! Please type single character only!" << endl << endl;
+								cin.clear();
+								cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+								continue;
+							}
+							if (seat.column < 'A' || seat.column > 'J')
+							{
+								cout << "Invalid choice! Please type character between A and J only!" << endl << endl;
+								continue;
+							}
+
+							// all good
+							break;
+						}
+						tix.seat = seat;
+						while (true)
+						{
+							cout << "Enter price : ";
+							cin >> tix.price;
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							if (cin.fail())
+							{
+								cout << "Invalid input! Please type numbers only!" << endl << endl;
+								cin.clear();
+								cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+								continue;
+							}
+							if (tix.price <= 0)
+							{
+								cout << "Invalid price! Please type positive numbers only!" << endl << endl;
+								continue;
+							}
+
+							// all good
+							break;
+						}
+						tix.ticket_id = ++TICKET_ID;
+						//TODO : insert to sorted list ?
+						newTransaction.list_of_tickets.addToEnd(tix);
+
+						cout << "Another entry? (0 - No, 1 - Yes) : ";
+						cin >> choice; 
+					}
+					while (choice == 1);
+					while (true) {
+						char delim = '/';
+						cout << "Enter date of purchase (format : dd/MM/YYYY) : ";
+						cin >> newTransaction.day >> delim >> newTransaction.month >> delim >> newTransaction.year;
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+						if (cin.fail())
+						{
+							cout << "Invalid input! Please try again" << endl << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						// all good
+						break;
+					}
+					cout << "Enter payment method : ";
+					getline(cin, newTransaction.payment_method);
+
+					transaction_list.addToEnd(newTransaction);
+
+					system("pause"); system("cls");
+					break;
+				}
 			case 9:
 				/*
 				 * Functionality : Show all transactions
