@@ -87,9 +87,9 @@ void createDummyData()
 	tix1.seat = s1;
 	tix1.movie = movie_list.getHead()->data;
 	movie_list.getAtIndex(0)->number_of_available_seats--;
-	tix1.price = 20;
+	tix1.price = 100;
 	tix1.ticket_id = 7;
-	transaction_list.getTail()->data.list_of_tickets.addToEnd(tix1);
+	transaction_list.getAtIndex(0)->list_of_tickets.addToEnd(tix1);
 
 	//movie_list.display();
 	//transaction_list.display();
@@ -109,11 +109,31 @@ void main1()
 	cout << *ls.getAtIndex(2) << endl;
 	cout << *ls.getAtIndex(5) << endl;
 }
+
+template <>
+auto node<Transaction>::valueOfData()
+{
+	double total = 0;
+	for (int i = 0; i < this->data.list_of_tickets.getSize(); ++i)
+	{
+		total += this->data.list_of_tickets.getAtIndex(i)->price;
+	}
+	return total;
+}
+
 int main(int argc, char* argv[])
 {
 	createDummyData();
 	// main program loop
 	// hard coded login
+	node<Transaction>* firstElem = transaction_list.getHead();
+	node<Transaction> thirdElem = *firstElem->next->next;
+	transaction_list.deleteAtIndex(2);
+	transaction_list.addToEnd(thirdElem.data);
+
+	//transaction_list.display();
+	//DoublyLinkedList<Transaction> sorted = DoublyLinkedList<Transaction>::mergeSort(transaction_list);
+	//sorted.display();
 	string username;
 	string password;
 
@@ -631,8 +651,64 @@ int main(int argc, char* argv[])
 				 * maybe can ask them if want ascend or descend
 				 * use merge sort 
 				 */
-				system("pause"); system("cls");
-				break;
+				{
+					print_title("Sort transaction by purchase amount");
+					DoublyLinkedList<Transaction> sortedList = DoublyLinkedList<Transaction>::mergeSort(transaction_list);
+					while (true) {
+						cout << "How do you want to display the sorted list : " << endl
+							<< "1. Ascending" << endl
+							<< "2. Descending" << endl;
+						cout << "Your choice : ";
+						cin >> choice;
+						if (cin.fail())
+						{
+							cout << "Invalid input! Please type numbers only!" << endl << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						if (choice != 1 && choice != 2)
+						{
+							cout << "Invalid input! Please type either 1 or 2 only!" << endl << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+						break;
+					}
+					switch (choice)
+					{
+					case 1:
+						{
+							node<Transaction>* temp = sortedList.getHead();
+							cout << setw(10) << "T. ID" << setw(20) << "Total price (RM)" << endl;
+
+							while(temp!=nullptr)
+							{
+								cout << setw(10) << temp->data.transaction_id << setw(20) << temp->valueOfData() << endl;
+								temp = temp->next;
+							}
+							cout << endl;
+							break;
+						}
+					case 2:
+						{
+							node<Transaction>* temp = sortedList.getTail();
+							cout << setw(10) << "T. ID" << setw(20) << "Total price (RM)" << endl;
+
+							while (temp != nullptr)
+							{
+								cout << setw(10) << temp->data.transaction_id << setw(20) << temp->valueOfData() << endl;
+								temp = temp->prev;
+							}
+							cout << endl;
+							break;
+						}
+					}
+					system("pause"); system("cls");
+					break;
+				}
 			case 11:
 				/*
 				 * Functionality : Show Specific Transaction Detail
@@ -660,3 +736,4 @@ int main(int argc, char* argv[])
 	}
 	return 0; 
 }
+
