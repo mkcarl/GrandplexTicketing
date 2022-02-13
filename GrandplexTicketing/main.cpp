@@ -169,6 +169,7 @@ int main(int argc, char* argv[])
 				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 				continue;
 			}
+			system("cls");
 			switch (choice)
 			{
 			case 1:
@@ -196,7 +197,6 @@ int main(int argc, char* argv[])
 				 *
 				 * additional idea : format the output into a tabular format
 				 */
-				system("cls");
 				print_title("All movies");
 				cout << setw(10) << right << "Movie ID"
 					<< " | " << setw(35) << right << "Title"
@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
 						<< " | " << setw(15) << right << mov->duration
 						<< " | " << setw(10) << right << mov->genre
 						<< " | " << setw(8) << left << string(mov->rating,'*')
-						<< " | " << setw(10) << right << mov->rating
+						<< " | " << setw(10) << right << mov->air_time
 						<< " | " << setw(20) << right << mov->number_of_available_seats
 						<< endl;
 				}
@@ -229,7 +229,6 @@ int main(int argc, char* argv[])
 				 * follow flow chart, EXCEPT, after found the product, no need to prompt if the user wan to search another item,
 				 * just go straight back to the main menu
 				 *
-
 				 */
 				system("pause"); system("cls");
 				break;
@@ -253,8 +252,186 @@ int main(int argc, char* argv[])
 				 *
 				 * follow flow chart
 				 */
-				system("pause"); system("cls");
-				break;
+				{
+				print_title("Edit Movie Details");
+					for (int i = 1; i <= movie_list.getSize(); ++i)
+					{
+						Movie* mov = movie_list.getAtIndex(i-1);
+						cout << setw(3) << right << i << ". " <<
+							setw(10) << left << mov->title << endl;
+					}
+					int movChoice_i;
+					Movie* movChoice;
+					while (true)
+					{
+						cout << "Please select the movie number which you want to edit : ";
+						cin >> movChoice_i;
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+						//validation
+						if (cin.fail())
+						{
+							cout << "Invalid input! Please type numbers only!" << endl << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						if (movChoice_i <= 0 || movChoice_i > movie_list.getSize())
+						{
+							cout << "Invalid choice! Please type numbers between 1 and " << movie_list.getSize() << " only!" << endl << endl;
+							continue;
+						}
+
+						// all good
+						break;
+					}
+					movChoice = movie_list.getAtIndex(movChoice_i - 1);
+					cout << endl << "Movie chosen : " << movChoice->title << endl;
+
+					cout << "Which detail do you want to edit?" << endl
+						<< "1. Title" << endl
+						<< "2. Duration" << endl
+						<< "3. Genre" << endl
+						<< "4. Rating" << endl
+						<< "5. Air Time" << endl << endl;
+
+					while (true){
+						cout << "Choice : ";
+						cin >> choice;
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+
+						if (cin.fail())
+						{
+							cout << "Invalid input! Please type numbers only!" << endl << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						if (choice <= 0 || choice > 5)
+						{
+							cout << "Invalid choice! Please type numbers between 1 and " << 5 << " only!" << endl << endl;
+							continue;
+						}
+						break;
+					}
+
+
+					string edited;
+					switch (choice)
+					{
+					case 1 :
+						{
+						print_title("Movie title");
+
+							cout << "Old value : " << movChoice->title << endl;
+							cout << "New value (leave blank to leave unchanged) : ";
+							getline(cin, edited);
+
+							if (!edited.empty())
+							{
+								movChoice->title = edited;
+								cout << endl << "Movie title edited!" << endl;
+							}
+							else
+							{
+								cout << endl << "Nothing was changed." << endl;
+							}
+							break;
+						}
+					case 2:
+						{
+						print_title("Movie duration");
+
+							cout << "Old value (hours) : " << movChoice->duration << endl;
+							cout << "New value (leave blank to leave unchanged) : ";
+							getline(cin, edited);
+
+							if (!edited.empty())
+							{
+								movChoice->duration = stod(edited);
+								cout << endl << "Movie duration edited!" << endl;
+							}
+							else
+							{
+								cout << endl << "Nothing was changed." << endl;
+							}
+							break;
+						}
+					case 3:
+					{
+						print_title("Movie genre");
+						cout << "Old value : " << movChoice->genre << endl;
+						cout << "New value (leave blank to leave unchanged) : ";
+						getline(cin, edited);
+
+
+						if (!edited.empty())
+						{
+							movChoice->genre = edited;
+							cout << endl << "Movie genre edited!" << endl;
+						}
+						else
+						{
+							cout << endl << "Nothing was changed." << endl;
+						}
+						break;
+					}
+					case 4:
+					{
+							while (true){
+								print_title("Movie rating");
+
+								cout << "Old value (stars) : " << movChoice->rating << endl;
+								cout << "New value (leave blank to leave unchanged) : ";
+								getline(cin, edited);
+
+
+								if (!edited.empty())
+								{
+									if (stoi(edited) < 1 || stoi(edited) > 5)
+									{
+										cout << "Invalid input. Please input a whole number between 1 and 5 only!" << endl
+										;
+										continue;
+									}
+									movChoice->rating = stoi(edited);
+									cout << endl << "Movie rating edited!" << endl;
+									
+								}
+								else
+								{
+									cout << endl << "Nothing was changed." << endl;
+								}
+								break;
+							}
+							break;
+					}
+					case 5:
+					{
+						print_title("Movie air time");
+
+						cout << "Old value (HHmm) : " << movChoice->air_time << endl;
+						cout << "New value (leave blank to leave unchanged) : ";
+						getline(cin, edited);
+
+
+						if (!edited.empty())
+						{
+							movChoice->air_time = edited;
+							cout << endl << "Movie air time edited!" << endl;
+						}
+						else
+						{
+							cout << endl << "Nothing was changed." << endl;
+						}
+						break;
+					}
+					}
+
+					system("pause"); system("cls");
+					break;
+				}
 			case 6:
 				/*
 				 * Functionality : Sort movie by available seats
