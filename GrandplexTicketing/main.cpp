@@ -86,6 +86,7 @@ void createDummyData()
 	++TICKET_ID;
 	tix1.seat = s1;
 	tix1.movie = movie_list.getHead()->data;
+
 	movie_list.getAtIndex(0)->number_of_available_seats--;
 	tix1.price = 100;
 	tix1.ticket_id = 7;
@@ -120,6 +121,8 @@ auto node<Transaction>::valueOfData()
 	}
 	return total;
 }
+
+
 
 int main(int argc, char* argv[])
 {
@@ -207,8 +210,142 @@ int main(int argc, char* argv[])
 				 * for inserting, just use the function from movie_list.addToEnd()
 				 * for deletion, just use function movie_list.deleteFromFront()
 				 */
+			{
+
+				DoublyLinkedList<Movie> movieList = DoublyLinkedList<Movie>();
+				print_title("New Movie");
+				Movie newMovie = Movie();
+				newMovie.movie_id = ++MOVIE_ID;
+				node<Movie>* temp = movieList.getTail();
+				Movie title;
+				Movie duration;
+				Movie genre;
+				Movie rating;
+				Movie air_time;
+				Movie air_hour;
+				Movie air_min;
+				Movie number_of_available_seats;
+				//int choice = 0;
+				//while (choice == 0)
+				do
+				{
+					while (true) {
+						cout << "New Movie Title: ";
+						cin >> newMovie.title;
+						break;
+					}
+					while (true)
+					{
+
+						cout << "Duration in hours(eg 2.5): ";
+						cin >> newMovie.duration;
+						if (cin.fail()) {
+							cout << "Invalid duration inputted, please try again !" << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						break;
+					}
+					while (true)
+					{
+						string addGenre;
+						cout << "Genre: ";
+						cin >> addGenre;
+						addGenre[0] = toupper(addGenre[0]);
+						newMovie.genre = addGenre;
+
+						break;
+					}
+					while (true)
+					{
+
+						
+						cout << "Rating (from 1 to 5): ";
+						cin >> newMovie.rating;
+						if (newMovie.rating <= 0 || newMovie.rating > 5)
+						{
+							cout << "Invalid rating value input, please try again with a value between 1 to 5 ! " << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						break;
+
+					}
+					while (true)
+					{	
+						
+						char delimiter = ':';
+						cout << "Air time (24 hour format = hr:min): ";
+						cin >> newMovie.air_hour >> delimiter >> newMovie.air_min;
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+						if (newMovie.air_hour > 23 || newMovie.air_hour < 0 && newMovie.air_min < 0 || newMovie.air_min > 59)
+						{
+							cout << "Invalid time format input, please check and try again ! Press any key to continue..." << endl << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+							//no input validation for if "string" is done.
+						} 
+						string combTime = to_string(newMovie.air_hour) + to_string(newMovie.air_min);
+						cout << "Time selected is " << combTime << " hours" << endl;
+						newMovie.air_time = combTime;
+						break;
+						
+					}
+					while(true)
+					{
+						cout << "Number of available seats (1 - 100): "; 
+						cin >> newMovie.number_of_available_seats;
+						if (newMovie.number_of_available_seats <= 0)
+						{
+							cout << "Invalid number of available seats, please try again with a number within the range !" << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						if (cin.fail())
+						{
+							cout << "Invalid input, only input postive numbers !" << endl;
+							cin.clear();
+							continue;
+						}
+						break;
+					}
+					movie_list.addToEnd(newMovie);
+					cout << endl;
+
+
+					//refer to case 8 add new transaction part for the input validation and continue loop 
+
+
+
+					/*
+					cout << "Genre: ";
+					cin >> newMovie.genre;
+
+
+					cout << "Rating (1-5): ";
+					cin >> newMovie.rating;
+
+
+					cout << "Air Time (in 24hr format eg:1400): ";
+					cin >> newMovie.air_time;
+
+					cout << "Number of available seats (maximum 100): ";
+					cin >> newMovie.number_of_available_seats;
+					*/
+					//int choice = 1;
+					break;
+					//cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				} while (true);
+
+
 				system("pause"); system("cls");
 				break;
+			}
+
 			case 2:
 				/*
 				 * Functionality : Display all movie
@@ -266,8 +403,48 @@ int main(int argc, char* argv[])
 				 * however, for the initial implementation, just do the latter first, the former might need to introduce a new variable, ask mk when in doubt
 				 *
 				 */
+				{
+				print_title("Filter by Genre");
+				string choiceGenre = "";
+				cout << "What genre do you want to filter by?: ";
+				cin >> choiceGenre;
+				//implement input checking for choiceGenre
+				choiceGenre[0] = toupper(choiceGenre[0]);
+				cout << setw(10) << right << "Movie ID"
+						<< " | " << setw(35) << right << "Title"
+						<< " | " << setw(15) << right << "Duration (hr)"
+						<< " | " << setw(10) << right << "Genre"
+						<< " | " << setw(8) << right << "Rating"
+						<< " | " << setw(10) << right << "Air Time"
+						<< " | " << setw(25) << right << "No. Available Seats"
+						<< endl;
+				cout << string(130, '-') << endl;
+				for (int i = 0;i < movie_list.getSize();++i)
+				{
+					Movie* mov = movie_list.getAtIndex(i);
+					if (choiceGenre == mov->genre)
+					{
+					cout << setw(10) << right << mov->movie_id
+						<< " | " << setw(35) << right << mov->title
+						<< " | " << setw(15) << right << mov->duration
+						<< " | " << setw(10) << right << mov->genre
+						<< " | " << setw(8) << left << string(mov->rating, '*')
+						<< " | " << setw(10) << right << mov->air_time
+						<< " | " << setw(25) << right << mov->number_of_available_seats
+						<< endl;
+					}
+					/*
+					if (choiceGenre != mov->genre && mov->genre == "")
+					{
+						cout << "No movies for said genre found, please try again" << endl;
+					}
+					*/
+
+					
+				}
 				system("pause"); system("cls");
 				break;
+				}
 			case 5:
 				/*
 				 * Functionality : Edit movie details
@@ -632,16 +809,55 @@ int main(int argc, char* argv[])
 					break;
 				}
 			case 9:
-				/*
-				 * Functionality : Show all transactions
-				 * Responsible : Hor Shen Hau
-				 *
-				 * follow flow chart, but don't need for advance feature, just print all and thats it
-				 *
-				 * additional idea : maybe format the output as a table
-				 */
+				{
+				//DoublyLinkedList<Transaction> trans = DoublyLinkedList<Transaction>::getAtIndex(list_of_tickets);
+				print_title("All Transactions");
+				cout << setw(10) << right << "Transaction ID"
+					<< " | " << setw(46) << right << "Date"
+					<< " | " << setw(15) << right << "Payment Method"
+					<< " | " <<setw(10) << right << "List of Tickets"
+					<< endl;
+				cout << string(130, '-') << endl;
+				for (int i = 0; i < transaction_list.getSize(); ++i)
+				{
+					
+					Transaction* t = transaction_list.getAtIndex(i);
+					//implement for loop here to store all the strings of list of tickets 
+					Ticket ticket;
+
+					string str_list_tix_id = "";
+					str_list_tix_id += "{ ";
+					
+					for (int j = 0; j < t->list_of_tickets.getSize(); ++j)
+					{
+						str_list_tix_id += to_string(t->list_of_tickets.getAtIndex(j)->ticket_id);
+						if (j != t->list_of_tickets.getSize()-1)
+						{
+							str_list_tix_id += " ,";
+						}
+					}
+					str_list_tix_id += " }";
+					
+					
+					// [1,2,3,4]
+					
+					//for (i = 0; i < )
+					if (t != nullptr)
+					{
+					cout << setw(14) << right << t->transaction_id
+						<< " | " << setw(35) << right << t->day
+						<< " / " << right << t->month
+						<< " / " << right << t->year
+						<< " | " << setw(15) << right << t->payment_method
+						<< " | " << setw(20) << str_list_tix_id
+						<< endl;
+						
+					
+					}
+				}
 				system("pause"); system("cls");
 				break;
+				}
 			case 10:
 				/*
 				 * Functionality : Sort transaction by purchase amount

@@ -242,6 +242,7 @@ public:
 			current->next->prev = current->prev;
 			delete current; 
 		}
+		--this->size;
 	}
 
 	T* getAtIndex(int index)
