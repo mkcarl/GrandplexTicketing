@@ -24,6 +24,37 @@ DoublyLinkedList<Movie> movie_list = DoublyLinkedList<Movie>();
 DoublyLinkedList<Transaction> transaction_list = DoublyLinkedList<Transaction>();
 int MOVIE_ID=0, TICKET_ID=0, TRANSACTION_ID=0; 
 
+void print_list()
+{
+	
+	print_title("All movies");
+	cout << setw(10) << right << "Movie ID"
+		<< " | " << setw(35) << right << "Title"
+		<< " | " << setw(15) << right << "Duration (hr)"
+		<< " | " << setw(10) << right << "Genre"
+		<< " | " << setw(8) << right << "Rating"
+		<< " | " << setw(10) << right << "Air Time"
+		<< " | " << setw(20) << right << "No. Available Seats"
+		<< endl;
+	cin.ignore();
+	cout << string(130, '-') << endl;
+	for (int i = 0; i < movie_list.getSize(); ++i)
+	{
+		//cout << movie_list.getSize() << endl;
+		//Sleep(1000);
+
+		Movie* mov = movie_list.getAtIndex(i);
+		cout << setw(10) << right << mov->movie_id
+			<< " | " << setw(35) << right << mov->title
+			<< " | " << setw(15) << right << mov->duration
+			<< " | " << setw(10) << right << mov->genre
+			<< " | " << setw(8) << left << string(mov->rating, '*')
+			<< " | " << setw(10) << right << mov->air_time
+			<< " | " << setw(20) << right << mov->number_of_available_seats
+			<< endl;
+	}
+}
+
 // hard coded sample data
 void createDummyData()
 {
@@ -121,6 +152,12 @@ auto node<Transaction>::valueOfData()
 	return total;
 }
 
+template <>
+auto node<Movie>::valueOfData()
+{
+	return this->data.number_of_available_seats;
+}
+
 int main(int argc, char* argv[])
 {
 	createDummyData();
@@ -179,9 +216,9 @@ int main(int argc, char* argv[])
 			<< "12. Log out" << endl;
 
 		int choice = 0;
-
-		while (true)
-		{
+		string moviename;
+		//while (true)
+		//{
 			cout << "Please input your choice (1-12) : ";
 			cin >> choice;
 
@@ -193,6 +230,7 @@ int main(int argc, char* argv[])
 				continue;
 			}
 			system("cls");
+			
 			switch (choice)
 			{
 			case 1:
@@ -220,39 +258,72 @@ int main(int argc, char* argv[])
 				 *
 				 * additional idea : format the output into a tabular format
 				 */
-				print_title("All movies");
-				cout << setw(10) << right << "Movie ID"
-					<< " | " << setw(35) << right << "Title"
-					<< " | " << setw(15) << right << "Duration (hr)"
-					<< " | " << setw(10) << right << "Genre"
-					<< " | " << setw(8) << right << "Rating"
-					<< " | " << setw(10) << right << "Air Time"
-					<< " | " << setw(20) << right << "No. Available Seats"
-					<< endl;
-				cout << string(130, '-') << endl;
-				for (int i = 0; i < movie_list.getSize(); ++i)
-				{
-					Movie* mov = movie_list.getAtIndex(i);
-					cout << setw(10) << right << mov->movie_id
-						<< " | " << setw(35) << right << mov->title
-						<< " | " << setw(15) << right << mov->duration
-						<< " | " << setw(10) << right << mov->genre
-						<< " | " << setw(8) << left << string(mov->rating,'*')
-						<< " | " << setw(10) << right << mov->air_time
-						<< " | " << setw(20) << right << mov->number_of_available_seats
-						<< endl;
-				}
+				//print_title("All movies");
+				//cout << setw(10) << right << "Movie ID"
+				//	<< " | " << setw(35) << right << "Title"
+				//	<< " | " << setw(15) << right << "Duration (hr)"
+				//	<< " | " << setw(10) << right << "Genre"
+				//	<< " | " << setw(8) << right << "Rating"
+				//	<< " | " << setw(10) << right << "Air Time"
+				//	<< " | " << setw(20) << right << "No. Available Seats"
+				//	<< endl;
+				//cout << string(130, '-') << endl;
+				////cin.ignore();
+
+				//for (int i = 0; i < movie_list.getSize(); ++i)
+				//{
+				//	Movie* mov = movie_list.getAtIndex(i);
+				//	cout << setw(10) << right << mov->movie_id
+				//		<< " | " << setw(35) << right << mov->title
+				//		<< " | " << setw(15) << right << mov->duration
+				//		<< " | " << setw(10) << right << mov->genre
+				//		<< " | " << setw(8) << left << string(mov->rating, '*')
+				//		<< " | " << setw(10) << right << mov->air_time
+				//		<< " | " << setw(20) << right << mov->number_of_available_seats
+				//		<< endl;
+				//}
+				print_list();
 				system("pause"); system("cls");
 				break;
 			case 3:
 				/*
-				 * Functionality : Search movie by name 
+				 * Functionality : Search movie by name
 				 * Responsible : Tan Sheng Jeh
 				 *
 				 * follow flow chart, EXCEPT, after found the product, no need to prompt if the user wan to search another item,
 				 * just go straight back to the main menu
 				 *
 				 */
+					
+					cout << "Enter the movie name:";
+					cin >> moviename;
+					int i;
+					for (i = 0; i < movie_list.getSize(); i++)
+					{
+						Movie* mov = movie_list.getAtIndex(i);
+						if (moviename == mov->title)
+						{
+							print_title("All movies");
+							cout << setw(10) << right << mov->movie_id
+								<< " | " << setw(35) << right << mov->title
+								<< " | " << setw(15) << right << mov->duration
+								<< " | " << setw(10) << right << mov->genre
+								<< " | " << setw(8) << left << string(mov->rating, '*')
+								<< " | " << setw(10) << right << mov->air_time
+								<< " | " << setw(20) << right << mov->number_of_available_seats
+								<< endl;
+							break;
+						}
+					}
+					if (i == movie_list.getSize())
+					{
+						cout << "No such movie found in the list." << endl;
+					}
+
+
+
+
+
 				system("pause"); system("cls");
 				break;
 			case 4:
@@ -475,8 +546,65 @@ int main(int argc, char* argv[])
 				// print(ori) -> [3,2,6,4,9]
 				// print(sorted) -> [2,3,4,6,9]
 
+				
+			{
+				print_title("Sort movie by available seats");
+				DoublyLinkedList<Movie> sortedList = DoublyLinkedList<Movie>::mergeSort(movie_list);
+				while (true) {
+					cout << "How do you want to display the sorted list : " << endl
+						<< "1. Ascending" << endl
+						<< "2. Descending" << endl;
+					cout << "Your choice : ";
+					cin >> choice;
+					if (cin.fail())
+					{
+						cout << "Invalid input! Please type numbers only!" << endl << endl;
+						cin.clear();
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+						continue;
+					}
+					if (choice != 1 && choice != 2)
+					{
+						cout << "Invalid input! Please type either 1 or 2 only!" << endl << endl;
+						cin.clear();
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+						continue;
+					}
+					cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					break;
+				}
+				switch (choice)
+				{
+				case 1:
+				{
+					node<Movie>* temp = sortedList.getHead();
+					cout << setw(10) << "Movie Name" << setw(20) << "Available Seats" << endl;
+
+					while (temp != nullptr)
+					{
+						cout << setw(10) << temp->data.title << setw(20) << temp->valueOfData() << endl;
+						temp = temp->next;
+					}
+					cout << endl;
+					break;
+				}
+				case 2:
+				{
+					node<Movie>* temp = sortedList.getTail();
+					cout << setw(10) << "Movie Name" << setw(20) << "Available seats" << endl;
+
+					while (temp != nullptr)
+					{
+						cout << setw(10) << temp->data.title << setw(20) << temp->valueOfData() << endl;
+						temp = temp->prev;
+					}
+					cout << endl;
+					break;
+				}
+				}
 				system("pause"); system("cls");
 				break;
+			}
 			case 7:
 				/*
 				 * Functionality : Delete movie
@@ -486,6 +614,32 @@ int main(int argc, char* argv[])
 				 * but for the actual delete part, no need to go through the list one by one, just use the function to delete at specific index.
 				 * user input : 3
 				 */
+			{
+				print_list();
+
+				int temp_movie_id;
+				int j;
+				int flag = 1;
+				cout << "Enter the Movie ID that you wanted to delete:" << endl;
+				cin >> temp_movie_id;
+				for (j = 0; j < movie_list.getSize(); ++j)
+				{
+					Movie* mov = movie_list.getAtIndex(j);
+					if (temp_movie_id == mov->movie_id)
+					{
+						movie_list.deleteAtIndex(j);
+						cout << " Movie deleted successfully." << endl;
+						flag = 0;
+						break;
+					}
+				}
+				if (flag == 1)
+				{
+					cout << "Movie ID not found." << endl;
+				}
+			}
+
+
 				system("pause"); system("cls");
 				break;
 			case 8:
@@ -731,8 +885,8 @@ int main(int argc, char* argv[])
 			}
 
 
-			break; // break from the choice loop
-		}
+			//break; // break from the choice loop
+		//}
 	}
 	return 0; 
 }
