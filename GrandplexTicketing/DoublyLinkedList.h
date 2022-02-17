@@ -151,9 +151,16 @@ public:
 		}
 
 		node<T>* temp = this->head;
-		
-		this->head = this->head->next; //set the head to the second element
-		this->head->prev = nullptr; // set the prev pointer of head to null
+		if (this->head == this->tail)
+		{
+			this->head = nullptr;
+			this->tail = nullptr;
+		}
+		else
+		{
+			this->head = this->head->next; //set the head to the second element
+			this->head->prev = nullptr; // set the prev pointer of head to null
+		}
 		delete temp;
 
 		--this->size;
@@ -167,8 +174,16 @@ public:
 		}
 
 		node<T>* temp = this->tail;
-		this->tail = this->tail->prev; //set the tail to the second last element
-		this->tail->next = nullptr; // set the next pointer of tail to null
+		if (this->head == this->tail)
+		{
+			this->head = nullptr;
+			this->tail = nullptr; 
+		}
+		else
+		{
+			this->tail = this->tail->prev; //set the tail to the second last element
+			this->tail->next = nullptr; // set the next pointer of tail to null
+		}
 		delete temp;
 
 		--this->size;
@@ -228,10 +243,13 @@ public:
 
 		if (index == 0)
 		{
+			currentNode = head->next;
 			deleteFromFront();
 		}
 		else if (index == this->size - 1)
 		{
+			currentNode = tail->prev;
+			--currentPosition;
 			deleteFromEnd();
 		}
 		else
