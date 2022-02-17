@@ -156,7 +156,7 @@ public:
 		this->head->prev = nullptr; // set the prev pointer of head to null
 		delete temp;
 
-		//--this->size;
+		--this->size;
 	}
 
 	void deleteFromEnd()
@@ -171,7 +171,7 @@ public:
 		this->tail->next = nullptr; // set the next pointer of tail to null
 		delete temp;
 
-		//--this->size;
+		--this->size;
 	}
 
 	void addAtIndex(T data, int index)
@@ -236,17 +236,19 @@ public:
 		}
 		else
 		{
-			for (int i = 0; i <= index; ++i)
+			for (int i = 0; i < index; ++i)
 			{
 				current = current->next;
 			}
 			current->prev->next = current->next;
 			current->next->prev = current->prev;
 			delete current;
+			--this->size;
 		}
-		//--this->size;
-		if(this->size >= 1)
-		this->size -= 1;
+		
+		
+		/*if(this->size >= 1)
+		this->size -= 1;*/
 	}
 
 	T* getAtIndex(int index)
@@ -271,7 +273,7 @@ public:
 					++currentPosition;
 				}
 			}
-			else
+			else if (index < currentPosition)
 			{
 				int j = currentPosition - index;
 				for (int i = 0; i < j; ++i)
