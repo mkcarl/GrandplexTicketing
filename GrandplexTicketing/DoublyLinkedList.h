@@ -242,6 +242,10 @@ public:
 			}
 			current->prev->next = current->next;
 			current->next->prev = current->prev;
+			if (this->currentNode == current)
+			{
+				this->currentNode = this->currentNode->next;
+			}
 			delete current;
 			--this->size;
 		}
