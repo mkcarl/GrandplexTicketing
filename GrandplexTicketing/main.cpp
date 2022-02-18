@@ -5,9 +5,9 @@
 #include "Entities.h"
 using namespace std;
 
-// TODO : Add movie (no of available seats, input title name use getline instead of cin, airtime validation 0000 problem )
+// TODO : Add movie ( input title name use getline instead of cin, airtime validation 0000 problem , airtime validation delim prob)
 // TODO : editmovie (air time validation)
-// TODO : new transaction (formatting add some spaces, no of available seats forgot to minus)
+// TODO : new transaction (no of available seats forgot to minus)
 // TODO : sort transaction function some FATAL exception 
 
 
@@ -229,6 +229,7 @@ int main(int argc, char* argv[])
 		//{
 		cout << "Please input your choice (1-12) : ";
 		cin >> choice;
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 			if (cin.fail())
 			{
@@ -337,25 +338,7 @@ int main(int argc, char* argv[])
 						break;
 						
 					}
-					while(true)
-					{
-						cout << "Number of available seats (1 - 100): "; 
-						cin >> newMovie.number_of_available_seats;
-						if (newMovie.number_of_available_seats <= 0)
-						{
-							cout << "Invalid number of available seats, please try again with a number within the range !" << endl;
-							cin.clear();
-							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-							continue;
-						}
-						if (cin.fail())
-						{
-							cout << "Invalid input, only input postive numbers !" << endl;
-							cin.clear();
-							continue;
-						}
-						break;
-					}
+					newMovie.number_of_available_seats = 100; // by default it has 100 seats
 					movie_list.addToEnd(newMovie);
 					cout << endl;
 
@@ -947,6 +930,7 @@ int main(int argc, char* argv[])
 
 				cout << "Another entry? (0 - No, 1 - Yes) : ";
 				cin >> choice;
+				cout << endl; 
 			} while (choice == 1);
 			while (true) {
 				char delim = '/';
@@ -968,8 +952,8 @@ int main(int argc, char* argv[])
 
 			transaction_list.addToEnd(newTransaction);
 
-					system("pause"); system("cls");
-					break;
+			system("pause"); system("cls");
+			break;
 				}
 			case 9:
 				{
