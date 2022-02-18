@@ -5,9 +5,8 @@
 #include "Entities.h"
 using namespace std;
 
-// TODO : Add movie ( input title name use getline instead of cin, airtime validation 0000 problem , airtime validation delim prob)
+// TODO : Add movie (airtime validation delim prob)
 // TODO : editmovie (air time validation)
-// TODO : new transaction (no of available seats forgot to minus)
 // TODO : sort transaction function some FATAL exception 
 
 
@@ -43,7 +42,6 @@ void print_list()
 		<< " | " << setw(10) << right << "Air Time"
 		<< " | " << setw(20) << right << "No. Available Seats"
 		<< endl;
-	cin.ignore();
 	cout << string(130, '-') << endl;
 	for (int i = 0; i < movie_list.getSize(); ++i)
 	{
@@ -155,7 +153,8 @@ auto node<Transaction>::valueOfData()
 	double total = 0;
 	for (int i = 0; i < this->data.list_of_tickets.getSize(); ++i)
 	{
-		total += this->data.list_of_tickets.getAtIndex(i)->price;
+		Ticket* target = this->data.list_of_tickets.getAtIndex(i);
+		total += (*target).price;
 	}
 	return total;
 }
@@ -275,7 +274,7 @@ int main(int argc, char* argv[])
 				{
 					while (true) {
 						cout << "New Movie Title: ";
-						cin >> newMovie.title;
+						getline(cin, newMovie.title);
 						break;
 					}
 					while (true)
@@ -283,10 +282,16 @@ int main(int argc, char* argv[])
 
 						cout << "Duration in hours(eg 2.5): ";
 						cin >> newMovie.duration;
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 						if (cin.fail()) {
 							cout << "Invalid duration inputted, please try again !" << endl;
 							cin.clear();
 							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
+						if (newMovie.duration <= 0)
+						{
+							cout << "Invalid duration inputted, please try again !" << endl;
 							continue;
 						}
 						break;
@@ -295,7 +300,7 @@ int main(int argc, char* argv[])
 					{
 						string addGenre;
 						cout << "Genre: ";
-						cin >> addGenre;
+						getline(cin, addGenre);
 						addGenre[0] = toupper(addGenre[0]);
 						newMovie.genre = addGenre;
 
@@ -303,15 +308,18 @@ int main(int argc, char* argv[])
 					}
 					while (true)
 					{
-
-						
 						cout << "Rating (from 1 to 5): ";
 						cin >> newMovie.rating;
+						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+						if (cin.fail()) {
+							cout << "Invalid duration inputted, please try again !" << endl;
+							cin.clear();
+							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+							continue;
+						}
 						if (newMovie.rating <= 0 || newMovie.rating > 5)
 						{
 							cout << "Invalid rating value input, please try again with a value between 1 to 5 ! " << endl;
-							cin.clear();
-							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 							continue;
 						}
 						break;
@@ -319,21 +327,24 @@ int main(int argc, char* argv[])
 					}
 					while (true)
 					{	
-						
 						char delimiter = ':';
 						cout << "Air time (24 hour format = hr:min): ";
 						cin >> newMovie.air_hour >> delimiter >> newMovie.air_min;
 						cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+						if (cin.fail()) {
+							cout << "Invalid time format! Please use (24 hour format = hr:min)" << endl;
+							cin.clear();
+							continue;
+						}
 						if (newMovie.air_hour > 23 || newMovie.air_hour < 0 && newMovie.air_min < 0 || newMovie.air_min > 59)
 						{
 							cout << "Invalid time format input, please check and try again ! Press any key to continue..." << endl << endl;
-							cin.clear();
-							cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 							continue;
 							//no input validation for if "string" is done.
-						} 
+						}
 						string combTime = to_string(newMovie.air_hour) + to_string(newMovie.air_min);
-						cout << "Time selected is " << combTime << " hours" << endl;
+						cout << "Time selected is " << setfill('0') << setw(2) << newMovie.air_hour << setw(2) << newMovie.air_min << " hours" << endl << setfill(' ');
+						
 						newMovie.air_time = combTime;
 						break;
 						
@@ -719,7 +730,8 @@ int main(int argc, char* argv[])
 
 		{
 			print_title("Sort movie by available seats");
-			DoublyLinkedList<Movie> sortedList = DoublyLinkedList<Movie>::mergeSort(movie_list);
+			DoublyLinkedList<Movie> sortedList = movie_list;
+			sortedList.mergeSort();
 			while (true) {
 				cout << "How do you want to display the sorted list : " << endl
 					<< "1. Ascending" << endl
@@ -858,6 +870,7 @@ int main(int argc, char* argv[])
 					break;
 				}
 				Movie* movChoice = movie_list.getAtIndex(movChoice_i - 1);
+				--movChoice->number_of_available_seats;
 				Ticket tix = Ticket();
 				Seat seat;
 				tix.movie = *movChoice;
@@ -925,7 +938,6 @@ int main(int argc, char* argv[])
 					break;
 				}
 				tix.ticket_id = ++TICKET_ID;
-				//TODO : insert to sorted list ?
 				newTransaction.list_of_tickets.addToEnd(tix);
 
 				cout << "Another entry? (0 - No, 1 - Yes) : ";
@@ -1016,7 +1028,8 @@ int main(int argc, char* argv[])
 				 */
 				{
 					print_title("Sort transaction by purchase amount");
-					DoublyLinkedList<Transaction> sortedList = DoublyLinkedList<Transaction>::mergeSort(transaction_list);
+					DoublyLinkedList<Transaction> sortedList = transaction_list;
+					sortedList.mergeSort();
 					while (true) {
 						cout << "How do you want to display the sorted list : " << endl
 							<< "1. Ascending" << endl

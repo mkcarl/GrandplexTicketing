@@ -31,7 +31,7 @@ class DoublyLinkedList
 		return newNode;
 	}
 
-	static node<T>* merge(node<T>* first, node<T>* second)
+	node<T>* merge(node<T>* first, node<T>* second)
 	{
 		// If first linked list is empty
 		if (!first)
@@ -42,7 +42,7 @@ class DoublyLinkedList
 			return first;
 
 		// Pick the smaller value
-		if (first->valueOfData() < second->valueOfData())
+		if ((*first).valueOfData() < (*second).valueOfData())
 		{
 			first->next = merge(first->next, second);
 			first->next->prev = first;
@@ -58,7 +58,7 @@ class DoublyLinkedList
 		}
 	}
 
-	static node<T>* split(node<T>* head)
+	node<T>* split(node<T>* head)
 	{
 		node<T>* fast = head, * slow = head;
 		while (fast->next && fast->next->next)
@@ -71,7 +71,7 @@ class DoublyLinkedList
 		return temp;
 	}
 
-	static node<T>* _mergeSort(node<T>* head)
+	node<T>* _mergeSort(node<T>* head)
 	{
 		if (!head || !head->next)
 			return head;
@@ -319,15 +319,9 @@ public:
 		cout << "]" << endl;
 	}
 
-	static DoublyLinkedList<T> mergeSort(DoublyLinkedList<T> ls)
+	void mergeSort()
 	{
-		node<T>* temp = _mergeSort(ls.getHead());
-		DoublyLinkedList<T> sortedList = DoublyLinkedList<T>();
-		while (temp != nullptr)
-		{
-			sortedList.addToEnd(temp->data);
-			temp = temp->next;
-		}
-		return sortedList;
+		this->head = _mergeSort(this->head);
 	}
+
 };
