@@ -8,6 +8,8 @@ struct node
 	T data;
 	node<T>* next;
 	node<T>* prev;
+
+	auto valueOfData();
 };
 
 template <typename T>
@@ -28,6 +30,61 @@ class DoublyLinkedList
 		newNode->data = data;
 		return newNode;
 	}
+
+	static node<T>* merge(node<T>* first, node<T>* second)
+	{
+		// If first linked list is empty
+		if (!first)
+			return second;
+
+		// If second linked list is empty
+		if (!second)
+			return first;
+
+		// Pick the smaller value
+		if (first->valueOfData() < second->valueOfData())
+		{
+			first->next = merge(first->next, second);
+			first->next->prev = first;
+			first->prev = NULL;
+			return first;
+		}
+		else
+		{
+			second->next = merge(first, second->next);
+			second->next->prev = second;
+			second->prev = NULL;
+			return second;
+		}
+	}
+
+	static node<T>* split(node<T>* head)
+	{
+		node<T>* fast = head, * slow = head;
+		while (fast->next && fast->next->next)
+		{
+			fast = fast->next->next;
+			slow = slow->next;
+		}
+		node<T>* temp = slow->next;
+		slow->next = NULL;
+		return temp;
+	}
+
+	static node<T>* _mergeSort(node<T>* head)
+	{
+		if (!head || !head->next)
+			return head;
+		node<T>* second = split(head);
+
+		// Recur for left and right halves
+		head = _mergeSort(head);
+		second = _mergeSort(second);
+
+		// Merge the two sorted halves
+		return merge(head, second);
+	}
+
 
 public:
 	DoublyLinkedList()
@@ -185,6 +242,7 @@ public:
 			current->next->prev = current->prev;
 			delete current; 
 		}
+		--this->size;
 	}
 
 	T* getAtIndex(int index)
@@ -235,5 +293,17 @@ public:
 			current = current->next; 
 		}
 		cout << "]" << endl ;
+	}
+
+	static DoublyLinkedList<T> mergeSort(DoublyLinkedList<T> ls)
+	{
+		node<T>* temp = _mergeSort(ls.getHead());
+		DoublyLinkedList<T> sortedList = DoublyLinkedList<T>();
+		while (temp != nullptr)
+		{
+			sortedList.addToEnd(temp->data);
+			temp = temp->next;
+		}
+		return sortedList;
 	}
 };
