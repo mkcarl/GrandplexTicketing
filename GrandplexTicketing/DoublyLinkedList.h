@@ -1,5 +1,5 @@
 #include <iostream>
-using namespace std; 
+using namespace std;
 #pragma once
 
 template <typename T>
@@ -132,13 +132,13 @@ public:
 
 		if (this->head == nullptr)
 		{
-			this->head = this->tail = newNode; 
+			this->head = this->tail = newNode;
 		}
 		else
 		{
 			this->tail->next = newNode;
 			newNode->prev = this->tail;
-			this->tail = newNode; 
+			this->tail = newNode;
 		}
 		++this->size;
 	}
@@ -150,10 +150,18 @@ public:
 			throw out_of_range("List is empty!");
 		}
 
-		node<T>* temp = this->head; 
-		this->head = this->head->next; //set the head to the second element
-		this->head->prev = nullptr; // set the prev pointer of head to null
-		delete temp; 
+		node<T>* temp = this->head;
+		if (this->head == this->tail)
+		{
+			this->head = nullptr;
+			this->tail = nullptr;
+		}
+		else
+		{
+			this->head = this->head->next; //set the head to the second element
+			this->head->prev = nullptr; // set the prev pointer of head to null
+		}
+		delete temp;
 
 		--this->size;
 	}
@@ -166,14 +174,22 @@ public:
 		}
 
 		node<T>* temp = this->tail;
-		this->tail = this->tail->prev; //set the tail to the second last element
-		this->tail->next = nullptr; // set the next pointer of tail to null
+		if (this->head == this->tail)
+		{
+			this->head = nullptr;
+			this->tail = nullptr; 
+		}
+		else
+		{
+			this->tail = this->tail->prev; //set the tail to the second last element
+			this->tail->next = nullptr; // set the next pointer of tail to null
+		}
 		delete temp;
 
 		--this->size;
 	}
 
-	void addAtIndex(T data, int index) 
+	void addAtIndex(T data, int index)
 	{
 		// 0 based index
 		if (index > this->size)
@@ -206,13 +222,14 @@ public:
 			current->next->prev = newNode;
 			newNode->next = current->next;
 			newNode->prev = current;
-			current->next = newNode; 
+			current->next = newNode;
 		}
 		++this->size;
 	}
 
 	void deleteAtIndex(int index)
 	{
+		//cout << index << endl;
 		if (index >= this->size)
 		{
 			throw out_of_range("Index out of bound!");
@@ -221,28 +238,35 @@ public:
 		{
 			throw out_of_range("List is empty!");
 		}
-		int i = 0;
+		
 		node<T>* current = this->head;
 
 		if (index == 0)
 		{
+			currentNode = head->next;
 			deleteFromFront();
 		}
 		else if (index == this->size - 1)
 		{
+			currentNode = tail->prev;
+			--currentPosition;
 			deleteFromEnd();
 		}
 		else
 		{
 			for (int i = 0; i < index; ++i)
 			{
-				current = current->next; 
+				current = current->next;
 			}
 			current->prev->next = current->next;
 			current->next->prev = current->prev;
-			delete current; 
+			if (this->currentNode == current)
+			{
+				this->currentNode = this->currentNode->next;
+			}
+			delete current;
+			--this->size;
 		}
-		--this->size;
 	}
 
 	T* getAtIndex(int index)
@@ -253,7 +277,7 @@ public:
 			currentPosition = index;
 			for (int i = 0; i < index; ++i)
 			{
-				currentNode = currentNode->next; 
+				currentNode = currentNode->next;
 			}
 		}
 		else
@@ -267,7 +291,7 @@ public:
 					++currentPosition;
 				}
 			}
-			else
+			else if (index < currentPosition)
 			{
 				int j = currentPosition - index;
 				for (int i = 0; i < j; ++i)
@@ -279,20 +303,20 @@ public:
 		}
 		return &currentNode->data;
 	}
-	
+
 	void display()
 	{
 		// mainly for debugging purposes
 		cout << "[";
-		node<T>* current = this->head; 
+		node<T>* current = this->head;
 		while (current != nullptr)
 		{
 			cout << current->data;
 			if (current->next != nullptr)
 				cout << ", ";
-			current = current->next; 
+			current = current->next;
 		}
-		cout << "]" << endl ;
+		cout << "]" << endl;
 	}
 
 	static DoublyLinkedList<T> mergeSort(DoublyLinkedList<T> ls)
