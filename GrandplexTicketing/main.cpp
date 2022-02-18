@@ -5,6 +5,13 @@
 #include "Entities.h"
 using namespace std;
 
+// TODO : Add movie (no of available seats, input title name use getline instead of cin, airtime validation 0000 problem )
+// TODO : editmovie (air time validation)
+// TODO : new transaction (formatting add some spaces, no of available seats forgot to minus)
+// TODO : sort transaction function some FATAL exception 
+
+
+
 // helper function to print title of the page
 // no real functionality, just nicer print
 void print_title(string text)
@@ -429,16 +436,25 @@ int main(int argc, char* argv[])
 			 * just go straight back to the main menu
 			 *
 			 */
-
-			cout << "Enter the movie name:";
+			print_title("Search movies");
+			cout << "Enter the movie name : ";
 			cin >> moviename;
+			cout << endl;
 			int i;
+			cout << setw(10) << right << "Movie ID"
+				<< " | " << setw(35) << right << "Title"
+				<< " | " << setw(15) << right << "Duration (hr)"
+				<< " | " << setw(10) << right << "Genre"
+				<< " | " << setw(8) << right << "Rating"
+				<< " | " << setw(10) << right << "Air Time"
+				<< " | " << setw(20) << right << "No. Available Seats"
+				<< endl;
+			cout << string(130, '-') << endl;
 			for (i = 0; i < movie_list.getSize(); i++)
 			{
 				Movie* mov = movie_list.getAtIndex(i);
 				if (moviename == mov->title)
 				{
-					print_title("All movies");
 					cout << setw(10) << right << mov->movie_id
 						<< " | " << setw(35) << right << mov->title
 						<< " | " << setw(15) << right << mov->duration
@@ -454,10 +470,6 @@ int main(int argc, char* argv[])
 			{
 				cout << "No such movie found in the list." << endl;
 			}
-
-
-
-
 
 				system("pause"); system("cls");
 				break;
