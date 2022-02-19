@@ -94,6 +94,40 @@ public:
 		size = 0;
 	}
 
+	DoublyLinkedList(const DoublyLinkedList& other)
+	{
+		if (other.head == nullptr)
+		{
+			head = tail = nullptr;
+			return; 
+		}
+
+		node<T>* temp = other.head;
+
+		head = new node<T>;
+		head->data = T(temp->data);
+		head->next = nullptr;
+		head->prev = nullptr;
+		currentNode = head;
+
+		temp = temp->next;
+
+		while (temp!=nullptr)
+		{
+			currentNode->next = new node <T>;
+			currentNode->next->prev = currentNode;
+			currentNode = currentNode->next;
+			currentNode->data = T(temp->data);
+			currentNode->next = nullptr;
+			tail = temp; 
+			temp = temp->next;
+		}
+		currentNode = head;
+		currentPosition = 0;
+		size = other.size; 
+
+	}
+	
 	int getSize()
 	{
 		return this->size;

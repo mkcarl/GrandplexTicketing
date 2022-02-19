@@ -154,7 +154,7 @@ auto node<Transaction>::valueOfData()
 	for (int i = 0; i < this->data.list_of_tickets.getSize(); ++i)
 	{
 		Ticket* target = this->data.list_of_tickets.getAtIndex(i);
-		total += (*target).price;
+		total += target->price;
 	}
 	return total;
 }
@@ -164,6 +164,7 @@ auto node<Movie>::valueOfData()
 {
 	return this->data.number_of_available_seats;
 }
+
 
 int main(int argc, char* argv[])
 {
@@ -1029,7 +1030,7 @@ int main(int argc, char* argv[])
 				{
 					print_title("Sort transaction by purchase amount");
 					DoublyLinkedList<Transaction> sortedList = transaction_list;
-					sortedList.mergeSort();
+ 					sortedList.mergeSort();
 					while (true) {
 						cout << "How do you want to display the sorted list : " << endl
 							<< "1. Ascending" << endl
