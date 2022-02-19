@@ -134,7 +134,7 @@ void createDummyData()
 
 void main1()
 {
-	DoublyLinkedList<string> ls = DoublyLinkedList<string>();
+	/*DoublyLinkedList<string> ls = DoublyLinkedList<string>();
 	ls.addToEnd("Hello");
 	ls.addToEnd("World");
 	ls.addToEnd("This");
@@ -144,8 +144,27 @@ void main1()
 
 	cout << *ls.getAtIndex(0) << endl;
 	cout << *ls.getAtIndex(2) << endl;
-	cout << *ls.getAtIndex(5) << endl;
+	cout << *ls.getAtIndex(5) << endl;*/
+
+	DoublyLinkedList<char> ls = DoublyLinkedList<char>();
+	ls.addToEnd('q');
+	ls.addToEnd('w');
+	ls.addToEnd('e');
+	ls.addToEnd('r');
+	ls.addToEnd('t');
+	ls.addToEnd('y');
+
+	ls.mergeSort();
+
+	ls.display();
 }
+
+template <>
+auto node<char>::valueOfData()
+{
+	return this->data;
+}
+
 
 template <>
 auto node<Transaction>::valueOfData()
@@ -1057,32 +1076,32 @@ int main(int argc, char* argv[])
 					switch (choice)
 					{
 					case 1:
+					{
+						node<Transaction>* temp = sortedList.getHead();
+						cout << setw(10) << "T. ID" << setw(20) << "Total price (RM)" << endl;
+
+						while (temp != nullptr)
 						{
-							node<Transaction>* temp = sortedList.getHead();
-							cout << setw(10) << "T. ID" << setw(20) << "Total price (RM)" << endl;
+							cout << setw(10) << temp->data.transaction_id << setw(20) << temp->valueOfData() << endl;
+							temp = temp->next;
+						}
+						cout << endl;
+						break;
+					}
+					case 2:
+					{
+						node<Transaction>* temp = sortedList.getTail();
+						cout << setw(10) << "T. ID" << setw(20) << "Total price (RM)" << endl;
 
-				while (temp != nullptr)
-				{
-					cout << setw(10) << temp->data.transaction_id << setw(20) << temp->valueOfData() << endl;
-					temp = temp->next;
-				}
-				cout << endl;
-				break;
-			}
-			case 2:
-			{
-				node<Transaction>* temp = sortedList.getTail();
-				cout << setw(10) << "T. ID" << setw(20) << "Total price (RM)" << endl;
-
-				while (temp != nullptr)
-				{
-					cout << setw(10) << temp->data.transaction_id << setw(20) << temp->valueOfData() << endl;
-					temp = temp->prev;
-				}
-				cout << endl;
-				break;
-			}
-			}
+						while (temp != nullptr)
+						{
+							cout << setw(10) << temp->data.transaction_id << setw(20) << temp->valueOfData() << endl;
+							temp = temp->prev;
+						}
+						cout << endl;
+						break;
+					}
+					}
 			system("pause"); system("cls");
 			break;
 		}
@@ -1101,8 +1120,6 @@ int main(int argc, char* argv[])
 			int choice;
 			do
 			{
-
-
 				print_title("All Transactions");
 				cout << setw(10) << right << "Transaction ID"
 					<< " | " << setw(46) << right << "Date"

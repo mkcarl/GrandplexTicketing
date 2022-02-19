@@ -92,6 +92,8 @@ public:
 		// constructor - instantiating the linked list
 		head = tail = nullptr;
 		size = 0;
+		currentPosition = 0;
+		currentNode = nullptr;
 	}
 
 	DoublyLinkedList(const DoublyLinkedList& other)
@@ -104,7 +106,7 @@ public:
 
 		node<T>* temp = other.head;
 
-		head = new node<T>;
+		head = tail = new node<T>;
 		head->data = T(temp->data);
 		head->next = nullptr;
 		head->prev = nullptr;
@@ -122,7 +124,7 @@ public:
 			tail = temp; 
 			temp = temp->next;
 		}
-		currentNode = head;
+		currentNode = nullptr;
 		currentPosition = 0;
 		size = other.size; 
 
@@ -356,6 +358,13 @@ public:
 	void mergeSort()
 	{
 		this->head = _mergeSort(this->head);
+
+		node<T>* temp = this->head;
+		while (temp->next != nullptr)
+		{
+			temp = temp->next;
+		}
+		this->tail = temp; 
 	}
 
 };
