@@ -13,15 +13,14 @@ struct Movie
 	string air_time;
 	int air_hour;
 	int air_min;
-
 	int number_of_available_seats;
 
+	// for debugging purposes only
 	friend ostream& operator<<(ostream& os, const Movie& dt)
 	{
 		os << "{" << dt.movie_id << ", " << dt.title << "}";
 		return os;
 	}
-
 };
 
 struct Seat
@@ -48,10 +47,10 @@ struct Transaction
 	string payment_method; 
 	DoublyLinkedList<Ticket> list_of_tickets;
 
+	// for debugging purposes only
 	friend ostream& operator<<(ostream& os, Transaction& dt)
 	{
 		os << "{" << dt.transaction_id << ", " << dt.day << "/" << dt.month << "/" << dt.year << ", " << dt.list_of_tickets.getSize() << "}";
 		return os;
 	}
-
 };

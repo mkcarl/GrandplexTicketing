@@ -31,6 +31,8 @@ class DoublyLinkedList
 		return newNode;
 	}
 
+	// for merge sort
+	// GeeksForGeeks. (2022). Merge Sort for Doubly Linked List. Retrieved from GeeksForGeeks: https://www.geeksforgeeks.org/merge-sort-for-doubly-linked-list/
 	node<T>* merge(node<T>* first, node<T>* second)
 	{
 		// If first linked list is empty
@@ -58,6 +60,8 @@ class DoublyLinkedList
 		}
 	}
 
+	// for merge sort
+	// GeeksForGeeks. (2022). Merge Sort for Doubly Linked List. Retrieved from GeeksForGeeks: https://www.geeksforgeeks.org/merge-sort-for-doubly-linked-list/
 	node<T>* split(node<T>* head)
 	{
 		node<T>* fast = head, * slow = head;
@@ -71,6 +75,8 @@ class DoublyLinkedList
 		return temp;
 	}
 
+	// for merge sort
+	// GeeksForGeeks. (2022). Merge Sort for Doubly Linked List. Retrieved from GeeksForGeeks: https://www.geeksforgeeks.org/merge-sort-for-doubly-linked-list/
 	node<T>* _mergeSort(node<T>* head)
 	{
 		if (!head || !head->next)
@@ -96,6 +102,8 @@ public:
 		currentNode = nullptr;
 	}
 
+	//implentation based on this link
+	//C++ Deep Copying Linked List. Stack Overflow. (2022). Retrieved 22 February 2022, from https://stackoverflow.com/a/40801723.
 	DoublyLinkedList(const DoublyLinkedList& other)
 	{
 		if (other.head == nullptr)
@@ -179,6 +187,44 @@ public:
 		++this->size;
 	}
 
+	void addAtIndex(T data, int index)
+	{
+		// 0 based index
+		if (index > this->size)
+		{
+			throw out_of_range("Index out of bound!");
+		}
+
+		node<T>* newNode = createNode(data);
+
+		node<T>* current = this->head;
+
+		if (this->head == nullptr)
+		{
+			this->head = this->tail = newNode;
+		}
+		else if (index == 0)
+		{
+			addToFront(data);
+		}
+		else if (index == this->size)
+		{
+			addToEnd(data);
+		}
+		else
+		{
+			for (int i = 0; i < index - 1; ++i)
+			{
+				current = current->next;
+			}
+			current->next->prev = newNode;
+			newNode->next = current->next;
+			newNode->prev = current;
+			current->next = newNode;
+		}
+		++this->size;
+	}
+
 	void deleteFromFront()
 	{
 		if (this->head == nullptr)
@@ -223,44 +269,6 @@ public:
 		delete temp;
 
 		--this->size;
-	}
-
-	void addAtIndex(T data, int index)
-	{
-		// 0 based index
-		if (index > this->size)
-		{
-			throw out_of_range("Index out of bound!");
-		}
-
-		node<T>* newNode = createNode(data);
-
-		node<T>* current = this->head;
-
-		if (this->head == nullptr)
-		{
-			this->head = this->tail = newNode;
-		}
-		else if (index == 0)
-		{
-			addToFront(data);
-		}
-		else if (index == this->size)
-		{
-			addToEnd(data);
-		}
-		else
-		{
-			for (int i = 0; i < index - 1; ++i)
-			{
-				current = current->next;
-			}
-			current->next->prev = newNode;
-			newNode->next = current->next;
-			newNode->prev = current;
-			current->next = newNode;
-		}
-		++this->size;
 	}
 
 	void deleteAtIndex(int index)
@@ -338,7 +346,7 @@ public:
 			}
 		}
 		return &currentNode->data;
-	}
+	}	
 
 	void display()
 	{
